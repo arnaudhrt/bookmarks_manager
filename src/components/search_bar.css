@@ -1,0 +1,56 @@
+.search_container {
+  margin-top: 100px;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.google_logo_block {
+  max-width: 200px;
+  margin-bottom: 40px;
+  img {
+    width: 100%;
+  }
+}
+
+.search_bar_block {
+  max-width: 700px;
+  flex-grow: 1;
+  width: 100%;
+  .search_bar {
+    position: relative;
+    .search_input {
+      background: rgba(48, 49, 52, 0);
+      border-radius: 50px;
+      padding: 12px 50px;
+      color: var(--light);
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      &:hover,
+      &:focus {
+        border: 1px solid #303134;
+        background: rgba(48, 49, 52, 1);
+      }
+    }
+    .search_icon {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--border-color);
+    }
+    .close_icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 20px;
+      font-size: 25px;
+      color: var(--border-color);
+      cursor: pointer;
+    }
+  }
+}
