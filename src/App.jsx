@@ -1,14 +1,14 @@
-import SearchBar from "./components/SearchBar";
-import "./app.css";
-import ServicesButtons from "./components/ServicesButtons";
-import MainApp from "./components/MainApp";
+import SearchBar from "./components/search_bar/SearchBar";
+import "./global.css";
+import ServicesButtons from "./components/services_row/ServicesButtons";
+import MainAppRow from "./components/main_apps_row/MainAppRow";
 
 export default function App() {
   return (
-    <main className="container">
+    <main className="max-w-screen-xl mx-auto flex justify-center flex-col">
       <SearchBar />
       <ServicesButtons />
-      <MainApp />
+      <MainAppRow />
     </main>
   );
 }
