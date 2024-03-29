@@ -1,6 +1,6 @@
 import SearchBar from "./components/search_bar/SearchBar";
 import "./global.css";
-import ServicesButtons from "./components/services_row/ServicesButtons";
+import ServicesButtons from "./components/services/ServicesButtons";
 import MainAppRow from "./components/main_apps_row/MainAppRow";
 
 export default function App() {

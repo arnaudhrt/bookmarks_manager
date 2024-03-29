@@ -34,4 +34,14 @@ export const servicesLinks = [
     name: "Chat GPT",
     url: "https://chat.openai.com/",
   },
+  {
+    id: 8,
+    name: "Google Map",
+    url: "https://www.google.com/maps",
+  },
+  {
+    id: 9,
+    name: "Chat GPT",
+    url: "https://chat.openai.com/",
+  },
 ];
