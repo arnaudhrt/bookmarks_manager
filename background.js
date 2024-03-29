@@ -1,3 +1,7 @@
+chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
+  console.log(bookmarkTreeNodes);
+});
+
 chrome.runtime.onInstalled.addListener(async () => {
   const services = [
     {

@@ -1,6 +1,6 @@
 import Button from "./Button";
 import { useState, useEffect, useRef } from "react";
-import { servicesLinks } from "../../utils/servicesLinks";
+import { servicesLinks } from "../../data/servicesLinks";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
