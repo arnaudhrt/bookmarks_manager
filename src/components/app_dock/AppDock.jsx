@@ -164,7 +164,7 @@ export default function AppDock() {
                   {
                     id: Date.now(),
                     name: newAppName,
-                    img_src: "/img/default_app_icon.svg",
+                    img_src: `https://www.google.com/s2/favicons?domain=${newAppUrl}&sz=128`,
                     url: newAppUrl,
                   },
                 ]);

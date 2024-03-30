@@ -12,7 +12,8 @@
     "declarativeNetRequestWithHostAccess",
     "declarativeNetRequest",
     "browsingData",
-    "scripting"
+    "scripting",
+    ["favicon"]
   ],
   "host_permissions": ["https://www.google.com/", "https://translate.google.com/?hl=fr", "https://coinmarketcap.com/", "https://chat.openai.com/"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
@@ -21,5 +22,18 @@
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["_favicon/*"],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
 }
