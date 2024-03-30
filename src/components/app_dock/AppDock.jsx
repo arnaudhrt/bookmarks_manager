@@ -224,6 +224,7 @@ export default function AppDock() {
                       return {
                         ...app,
                         name: editedAppName,
+                        img_src: `https://www.google.com/s2/favicons?domain=${editedAppUrl}&sz=128`,
                         url: editedAppUrl,
                       };
                     }
