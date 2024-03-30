@@ -81,28 +81,33 @@ export default function AppDock() {
 
         {/* RIGHT CLICK MENU */}
         <ContextMenuContent className="border border-border_color bg-bg_input text-bg_light">
-          <ContextMenuItem className="flex items-center" onSelect={handleOpenApp}>
-            <span className="grow">Open</span>
-            <RxExternalLink className="text-sm ml-2" />
-          </ContextMenuItem>
-          <ContextMenuItem className="flex items-center" onSelect={() => setisModalCreateOpen(true)}>
-            <span className="grow">Add</span>
-            <RxPlusCircled className="text-sm ml-2" />
-          </ContextMenuItem>
-          <ContextMenuItem className="flex items-center" onSelect={() => setisModalEditOpen(true)}>
-            <span className="grow">Edit</span>
-            <RxPencil1 className="text-sm ml-2" />
-          </ContextMenuItem>
-          <ContextMenuItem
-            className="flex items-center"
-            onSelect={() => {
-              setUserApps((prevApps) => prevApps.filter((app) => app.id !== selectedApp.id));
-              setSelectedApp(null);
-            }}
-          >
-            <span className="grow">Remove</span>
-            <RxTrash className="text-sm ml-2" />
-          </ContextMenuItem>
+          {selectedApp ? (
+            <>
+              <ContextMenuItem className="flex items-center" onSelect={handleOpenApp}>
+                <span className="grow">Open</span>
+                <RxExternalLink className="text-sm ml-2" />
+              </ContextMenuItem>
+              <ContextMenuItem className="flex items-center" onSelect={() => setisModalEditOpen(true)}>
+                <span className="grow">Edit</span>
+                <RxPencil1 className="text-sm ml-2" />
+              </ContextMenuItem>
+              <ContextMenuItem
+                className="flex items-center"
+                onSelect={() => {
+                  setUserApps((prevApps) => prevApps.filter((app) => app.id !== selectedApp.id));
+                  setSelectedApp(null);
+                }}
+              >
+                <span className="grow">Remove</span>
+                <RxTrash className="text-sm ml-2" />
+              </ContextMenuItem>
+            </>
+          ) : (
+            <ContextMenuItem className="flex items-center" onSelect={() => setisModalCreateOpen(true)}>
+              <span className="grow">Add</span>
+              <RxPlusCircled className="text-sm ml-2" />
+            </ContextMenuItem>
+          )}
         </ContextMenuContent>
       </ContextMenu>
 
@@ -164,7 +169,7 @@ export default function AppDock() {
                   {
                     id: Date.now(),
                     name: newAppName,
-                    img_src: `https://www.google.com/s2/favicons?domain=${newAppUrl}&sz=128`,
+                    img_src: `https://www.google.com/s2/favicons?domain=${newAppUrl}&sz=180`,
                     url: newAppUrl,
                   },
                 ]);
@@ -224,7 +229,7 @@ export default function AppDock() {
                       return {
                         ...app,
                         name: editedAppName,
-                        img_src: `https://www.google.com/s2/favicons?domain=${editedAppUrl}&sz=128`,
+                        img_src: `https://www.google.com/s2/favicons?domain=${editedAppUrl}&sz=180`,
                         url: editedAppUrl,
                       };
                     }

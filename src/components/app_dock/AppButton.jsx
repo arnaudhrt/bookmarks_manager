@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function AppButton({ id, src, url, name }) {
   const [color, setColor] = useState("");
@@ -21,7 +21,7 @@ export default function AppButton({ id, src, url, name }) {
       try {
         const pixelData = ctx.getImageData(2, 2, 1, 1).data;
 
-        if (!pixelData) {
+        if (pixelData[3] === 0) {
           // Gérez les pixels transparents comme vous le souhaitez ici
           // Par exemple, définissez une couleur de fond par défaut ou laissez-le transparent
           setColor("#FFF"); // ou une autre couleur par défaut
@@ -36,7 +36,7 @@ export default function AppButton({ id, src, url, name }) {
       }
     };
   }, [src]);
-  console.log(name + " " + color);
+  console.log(color);
   return (
     <a href={url} id={id}>
       <div className="flex flex-col justify-center items-center transition text-center cursor-pointer hover:scale-105">
