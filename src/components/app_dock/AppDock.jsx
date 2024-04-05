@@ -1,11 +1,8 @@
-import AppButton from "./AppButton";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
-import { RxExternalLink } from "react-icons/rx";
-import { RxPencil1 } from "react-icons/rx";
-import { RxPlusCircled } from "react-icons/rx";
-import { RxTrash } from "react-icons/rx";
 import { useState, useEffect } from "react";
+import AppButton from "./AppButton";
 import { defaultDockApps } from "../../data/defaultDockApps";
+import { RxExternalLink, RxPencil1, RxPlusCircled, RxTrash } from "react-icons/rx";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +33,7 @@ export default function AppDock() {
   }, [userApps]);
 
   // MAX APPS IN DOCK ALLOWED
-  const dockMaxApps = 10;
+  const dockMaxApps = 8;
 
   // SELECTED APP ON RIGHT CLICK STATE
   const [selectedApp, setSelectedApp] = useState(null);
@@ -80,7 +77,7 @@ export default function AppDock() {
         </ContextMenuTrigger>
 
         {/* RIGHT CLICK MENU */}
-        <ContextMenuContent className="border border-border_color bg-bg_input text-bg_light">
+        <ContextMenuContent className="border border-border bg-background">
           {selectedApp ? (
             <>
               <ContextMenuItem className="flex items-center" onSelect={handleOpenApp}>
@@ -113,14 +110,14 @@ export default function AppDock() {
 
       {/* CREATE NEW APP */}
       <AlertDialog open={isModalCreateOpen}>
-        <AlertDialogContent className="border boder-boder_color bg-bg_input text-bg_light">
+        <AlertDialogContent className="border boder-boder bg-background">
           <AlertDialogHeader>
             <AlertDialogTitle>Add New App</AlertDialogTitle>
-            <AlertDialogDescription className="text-bg_light">
+            <AlertDialogDescription>
               <div>
-                <p>You can add up to 10 apps to your dock, if you want to add more, you need to remove some apps.</p>
+                <p>You can add up to 8 apps to your dock, if you want to add more, you need to remove some apps.</p>
               </div>
-              <Separator className="my-5" />
+              <Separator className="my-5 bg-foreground/90" />
               <div className="mb-4">
                 <Label htmlFor="app-name" className="text-xs mb-2 block">
                   App Name
@@ -152,13 +149,13 @@ export default function AppDock() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="bg-bg_input border boder-border_color hover:text-red-600 hover:bg-bg_input hover:border-red-600"
+              className="bg-app_bg border boder-border hover:text-red-600 hover:bg-bg_input hover:border-red-600"
               onClick={() => setisModalCreateOpen(false)}
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="border bg-bg_light text-black hover:text-white hover:border-green-800 hover:bg-green-500"
+              className="border border-border bg-foreground/90 hover:border-green-800 hover:bg-green-500"
               onClick={() => {
                 if (userApps.length >= dockMaxApps) {
                   setIsMaxAppsReached(true);
@@ -184,44 +181,34 @@ export default function AppDock() {
 
       {/* EDIT APP */}
       <AlertDialog open={isModalEditOpen}>
-        <AlertDialogContent className="border boder-boder_color bg-bg_input text-bg_light">
+        <AlertDialogContent className="border boder-boder bg-background">
           <AlertDialogHeader>
             <AlertDialogTitle>Edit App</AlertDialogTitle>
-            <AlertDialogDescription className="text-bg_light">
-              <Separator className="my-5" />
+            <AlertDialogDescription>
+              <Separator className="my-5 bg-foreground/90" />
               <div className="mb-4">
                 <Label htmlFor="app-name" className="text-xs mb-2 block">
                   App Name
                 </Label>
-                <Input
-                  id="app-name"
-                  className="text-bg_dark placeholder:text-gray-400"
-                  onChange={(e) => setEditedAppName(e.target.value)}
-                  defaultValue={selectedApp?.name}
-                />
+                <Input id="app-name" className="" onChange={(e) => setEditedAppName(e.target.value)} defaultValue={selectedApp?.name} />
               </div>
               <div>
                 <Label htmlFor="app-url" className="text-xs mb-2 block">
                   App URL
                 </Label>
-                <Input
-                  id="app-url"
-                  className="text-bg_dark placeholder:text-gray-400"
-                  onChange={(e) => setEditedAppUrl(e.target.value)}
-                  defaultValue={selectedApp?.url}
-                />
+                <Input id="app-url" className="" onChange={(e) => setEditedAppUrl(e.target.value)} defaultValue={selectedApp?.url} />
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="bg-bg_input border boder-border_color hover:text-red-600 hover:bg-bg_input hover:border-red-600"
+              className="bg-app_bg border boder-border hover:text-red-600 hover:bg-bg_input hover:border-red-600"
               onClick={() => setisModalEditOpen(false)}
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="border bg-bg_light text-black hover:text-white hover:border-green-800 hover:bg-green-500"
+              className="border border-border bg-foreground/90 hover:border-green-800 hover:bg-green-500"
               onClick={() => {
                 setUserApps((prevApps) =>
                   prevApps.map((app) => {

@@ -1,14 +1,16 @@
-import SearchBar from "./components/search_bar/SearchBar";
 import "./global.css";
-import ServicesButtons from "./components/services/ServicesNav";
-import MainAppRow from "./components/app_dock/AppDock";
+import Header from "./components/header/Header";
+import { ThemeProvider } from "./components/global/DarkmodeContext";
+import AppDock from "./components/app_dock/AppDock";
 
 export default function App() {
   return (
-    <main className="max-w-screen-xl mx-auto flex justify-center flex-col">
-      <SearchBar />
-      <ServicesButtons />
-      <MainAppRow />
-    </main>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <>
+        <Header />
+        <main className="max-w-screen-xl mx-auto flex justify-center flex-col"></main>
+        <AppDock />
+      </>
+    </ThemeProvider>
   );
 }
