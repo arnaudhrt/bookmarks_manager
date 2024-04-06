@@ -29,7 +29,6 @@ export default function AppDock() {
   // SAVE USER APPS TO LOCAL STORAGE WHEN UPDATED
   useEffect(() => {
     localStorage.setItem("userApps", JSON.stringify(userApps));
-    console.log(userApps);
   }, [userApps]);
 
   // MAX APPS IN DOCK ALLOWED
