@@ -14,6 +14,7 @@ import { Input } from "../ui/input";
 import Bookmark from "./Bookmark";
 import FolderBlock from "./FolderBlock";
 import { useToast } from "@/components/ui/use-toast";
+import CreateBlock from "./CreateBlock";
 
 export default function ContainerBookmarks() {
   const { toast } = useToast();
@@ -32,16 +33,6 @@ export default function ContainerBookmarks() {
     const newFolder = {
       name: "Imported",
       bookmarks: mockBookmarks,
-    };
-    setUserFolders([...userFolders, newFolder]);
-  };
-
-  const [folderName, setFolderName] = useState("");
-  const [hasSameName, setHasSameName] = useState(false);
-  const createFolder = () => {
-    const newFolder = {
-      name: folderName,
-      bookmarks: [],
     };
     setUserFolders([...userFolders, newFolder]);
   };
@@ -71,63 +62,7 @@ export default function ContainerBookmarks() {
     <>
       <div className="mt-16 min-h-[300px] border border-border rounded-md shadow-xl flex">
         <div className="flex flex-col w-[500px] border-r border-border">
-          <div className="flex justify-between items-center border-b border-border px-5 py-3 w-full">
-            <div className="flex gap-2 justify-center items-center">
-              <IoBookmarksOutline className="h-5 w-5" />
-              <h3>Bookmarks</h3>
-            </div>
-            <div className="flex gap-2">
-              <Popover
-                onOpenChange={() => {
-                  setFolderName("");
-                }}
-              >
-                <PopoverTrigger>
-                  <Button variant="outline" size="icon">
-                    <BiFolderPlus className="h-5 w-5" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="p-2">
-                    <h4 className="text-md font-medium ml-1">Create a new folder</h4>
-                    <Input
-                      type="text"
-                      placeholder="Folder name"
-                      className="w-full rounded-sm px-3 py-2 mt-4"
-                      onChange={(e) => setFolderName(e.target.value)}
-                    />
-                    <PopoverClose>
-                      <Button
-                        onClick={() => {
-                          for (let folder of userFolders) {
-                            if (folder.name === folderName) {
-                              toast({
-                                variant: "destructive",
-                                title: "Folder already exists!",
-                                description: "Please choose another name.",
-                              });
-                              return;
-                            }
-                          }
-                          if (folderName === "") {
-                            return;
-                          }
-                          createFolder();
-                        }}
-                        className="mt-3 hover:border-green-800 hover:bg-green-500"
-                      >
-                        Create
-                      </Button>
-                    </PopoverClose>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <Button variant="outline" size="icon">
-                <BiBookmarkPlus className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
+          <CreateBlock userFolders={userFolders} setUserFolders={setUserFolders} />
           <FolderBlock
             selectedFolder={selectedFolder}
             setSelectedFolder={setSelectedFolder}
@@ -137,7 +72,7 @@ export default function ContainerBookmarks() {
         </div>
         <div className="w-full grow p-4 relative">
           {selectedFolder.bookmarks.length > 0 ? (
-            mockBookmarks.map((bookmark) => (
+            selectedFolder.bookmarks.map((bookmark) => (
               <Bookmark
                 key={bookmark.id}
                 url={bookmark.url}
