@@ -7,6 +7,7 @@ import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { RxTrash } from "react-icons/rx";
 
 export default function SortBlock({
   importBookmarks,
@@ -63,8 +64,8 @@ export default function SortBlock({
         />
         <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
           <PopoverTrigger asChild>
-            <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
-              {valueCombobox ? valueCombobox : "Move to..."}
+            <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between min-w-36">
+              {valueCombobox ? valueCombobox : "Move to ..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -89,6 +90,21 @@ export default function SortBlock({
             </Command>
           </PopoverContent>
         </Popover>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => {
+            setUserFolders((prev) => {
+              const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
+              prev[folderIndex].bookmarks = prev[folderIndex].bookmarks.filter((b) => !checkboxValues.includes(b.id));
+              return [...prev];
+            });
+            setCheckboxValues([]);
+          }}
+          className={`p-2 flex justify-center items-center transition`}
+        >
+          <RxTrash className="h-5 w-5 font-black" />
+        </Button>
       </div>
       <Button
         variant="outline"

@@ -17,7 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { v4 as uuidv4 } from "uuid";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
@@ -28,11 +27,13 @@ export default function Bookmark({
   icon,
   id,
   checkboxValues,
+  setCheckboxValues,
   checkboxChange,
   setSelectedBookmark,
   selectedBookmark,
   userFolders,
   setUserFolders,
+  selectedFolder,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [editBookmark, setEditBookmark] = useState(false);
@@ -40,6 +41,8 @@ export default function Bookmark({
   const [editBookmarkUrl, setEditBookmarkUrl] = useState(url);
   const [editBookmarkDescription, setEditBookmarkDescription] = useState(description);
   const [errorEditBookmark, setErrorEditBookmark] = useState(false);
+
+  console.log(checkboxValues);
 
   useEffect(() => {
     if (checkboxValues.includes(id)) {
@@ -83,7 +86,22 @@ export default function Bookmark({
             <span className="grow">Edit</span>
             <RxPencil1 className="text-sm ml-2" />
           </ContextMenuItem>
-          <ContextMenuItem className="flex items-center">
+          <ContextMenuItem
+            className="flex items-center"
+            onSelect={() => {
+              setUserFolders((prev) => {
+                const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
+                if (checkboxValues.length > 0) {
+                  prev[folderIndex].bookmarks = prev[folderIndex].bookmarks.filter((b) => !checkboxValues.includes(b.id));
+                  return [...prev];
+                } else {
+                  prev[folderIndex].bookmarks = prev[folderIndex].bookmarks.filter((b) => b.id !== id);
+                  return [...prev];
+                }
+              });
+              setCheckboxValues([]);
+            }}
+          >
             <span className="grow">Remove</span>
             <RxTrash className="text-sm ml-2" />
           </ContextMenuItem>
@@ -163,22 +181,16 @@ export default function Bookmark({
                 }
 
                 setUserFolders((prev) => {
-                  return prev.map((folder) => {
-                    return {
-                      ...folder,
-                      bookmarks: folder.bookmarks.map((bookmark) => {
-                        if (bookmark.id === selectedBookmark) {
-                          return {
-                            ...bookmark,
-                            title: editBookmarkName,
-                            url: editBookmarkUrl,
-                            description: editBookmarkDescription,
-                          };
-                        }
-                        return bookmark;
-                      }),
-                    };
-                  });
+                  const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
+                  const bookmarkIndex = prev[folderIndex].bookmarks.findIndex((b) => b.id === selectedBookmark);
+                  const editedBookmark = {
+                    ...prev[folderIndex].bookmarks[bookmarkIndex],
+                    title: editBookmarkName,
+                    url: editBookmarkUrl,
+                    description: editBookmarkDescription,
+                  };
+                  prev[folderIndex].bookmarks[bookmarkIndex] = editedBookmark;
+                  return [...prev];
                 });
 
                 setEditBookmark(false);

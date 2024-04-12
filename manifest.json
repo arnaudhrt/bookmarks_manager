@@ -17,9 +17,6 @@
   ],
   "host_permissions": ["https://www.google.com/", "https://translate.google.com/?hl=fr", "https://coinmarketcap.com/", "https://chat.openai.com/"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "chrome_url_overrides": {
     "newtab": "index.html"
   }

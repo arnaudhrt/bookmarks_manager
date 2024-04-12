@@ -6,30 +6,74 @@ import { IoAlertCircleOutline } from "react-icons/io5";
 import Bookmark from "./Bookmark";
 import FolderBlock from "./FolderBlock";
 import CreateBlock from "./CreateBlock";
-
+import { v4 as uuidv4 } from "uuid";
 import SortBlock from "./SortBlock";
 
 export default function ContainerBookmarks() {
-  const [userBookmarks, setUserBookmarks] = useState([]);
   const [userFolders, setUserFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState({ name: "Social", bookmarks: [] });
   const [selectedBookmark, setSelectedBookmark] = useState(null);
   const [isImported, setIsImported] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState([]);
 
+  // Load the bookmarks from the local storage or set the default folders
   useEffect(() => {
-    setUserFolders(defaultFolders);
+    chrome.storage.local.get("bookmarks", function (result) {
+      if (result.bookmarks) {
+        console.log("Bookmarks found", result.bookmarks);
+        setUserFolders(result.bookmarks);
+      } else {
+        setUserFolders(defaultFolders);
+      }
+    });
   }, []);
 
+  // Save the bookmarks to the local storage
+  useEffect(() => {
+    chrome.storage.local.set({ bookmarks: userFolders });
+  }, [userFolders]);
+
+  //Extract bookmarks from the browser
+  function extractBookmarks(bookmarkNodes) {
+    let bookmarks = [];
+    function traverseNodes(nodes) {
+      for (let node of nodes) {
+        if (node.url && node.url !== "about:blank") {
+          bookmarks.push({ title: node.title, url: node.url, id: uuidv4() });
+        }
+        if (node.children) {
+          traverseNodes(node.children);
+        }
+      }
+    }
+
+    traverseNodes(bookmarkNodes);
+    return bookmarks;
+  }
+
+  // Import existing bookmarks from the browser
   const importBookmarks = async () => {
-    if (mockBookmarks.length === 0) return;
-    const newFolder = {
-      name: "Imported",
-      bookmarks: mockBookmarks,
-    };
-    setUserFolders([...userFolders, newFolder]);
+    chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
+      const bookmarks = extractBookmarks(bookmarkTreeNodes);
+      const newFolder = {
+        name: "Imported",
+        bookmarks: bookmarks,
+      };
+
+      if (bookmarks.length === 0) return;
+      if (userFolders.find((folder) => folder.name === "Imported")) {
+        setUserFolders((prev) => {
+          const index = prev.findIndex((folder) => folder.name === "Imported");
+          prev[index].bookmarks = [...bookmarks];
+          return [...prev];
+        });
+        return;
+      }
+      setUserFolders([...userFolders, newFolder]);
+    });
   };
 
+  // Handle the checkbox change
   const checkboxChange = (input) => {
     setCheckboxValues((prev) => {
       if (Array.isArray(input)) {
@@ -47,28 +91,6 @@ export default function ContainerBookmarks() {
       }
     });
   };
-
-  // Extract bookmarks from the browser
-  // function extractBookmarks(bookmarkNodes) {
-  //   let bookmarks = [];
-  //   function traverseNodes(nodes) {
-  //     for (let node of nodes) {
-  //       if (node.url && node.url !== "about:blank") {
-  //         bookmarks.push({ title: node.title, url: node.url });
-  //       }
-  //       if (node.children) {
-  //         traverseNodes(node.children);
-  //       }
-  //     }
-  //   }
-
-  //   traverseNodes(bookmarkNodes);
-  //   return bookmarks;
-  // }
-  // chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
-  //   const bookmarks = extractBookmarks(bookmarkTreeNodes);
-  //   setUserBookmarks(bookmarks);
-  // });
 
   return (
     <div className="mt-16 min-h-[300px] border border-border rounded-md shadow-xl flex">
@@ -110,6 +132,7 @@ export default function ContainerBookmarks() {
                 userFolders={userFolders}
                 setSelectedBookmark={setSelectedBookmark}
                 selectedBookmark={selectedBookmark}
+                selectedFolder={selectedFolder}
               />
             ))
           ) : (
