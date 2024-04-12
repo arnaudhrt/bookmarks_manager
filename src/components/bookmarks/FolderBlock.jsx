@@ -2,12 +2,12 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { RxPencil1 } from "react-icons/rx";
 import { RxTrash } from "react-icons/rx";
 import Folder from "./Folder";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function FolderBlock({ userFolders, setUserFolders, selectedFolder, setSelectedFolder }) {
-  useEffect(() => {
-    console.log("count");
-  }, [userFolders]);
+  const [editFolder, setEditFolder] = useState("");
+
+  useEffect(() => {}, [userFolders]);
   return (
     <>
       <ContextMenu>
@@ -23,12 +23,20 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
                 onContextMenu={() => {
                   setSelectedFolder(folder);
                 }}
+                editFolder={editFolder}
+                setEditFolder={setEditFolder}
+                setUserFolders={setUserFolders}
               />
             ))}
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="border border-border bg-background">
-          <ContextMenuItem className="flex items-center" onSelect={() => console.log("e")}>
+          <ContextMenuItem
+            className="flex items-center"
+            onSelect={() => {
+              setEditFolder(userFolders.find((folder) => folder.name === selectedFolder.name).name);
+            }}
+          >
             <span className="grow">Edit</span>
             <RxPencil1 className="text-sm ml-2" />
           </ContextMenuItem>

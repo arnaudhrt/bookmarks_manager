@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Check } from "lucide-react";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   AlertDialog,
@@ -32,6 +35,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
   const [newBookmarkName, setNewBookmarkName] = useState("");
   const [newBookmarkUrl, setNewBookmarkUrl] = useState("");
   const [newBookmarkDescription, setNewBookmarkDescription] = useState("");
+  const [errorCreateBookmark, setErrorCreateBookmark] = useState(false);
   console.log(userFolders);
   console.log(valueCombobox);
   const { toast } = useToast();
@@ -180,6 +184,13 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                       </Command>
                     </PopoverContent>
                   </Popover>
+                  {errorCreateBookmark ? (
+                    <Alert variant="destructive" className={`mt-4 "block" "hidden"`}>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Form is not valid!</AlertTitle>
+                      <AlertDescription className="text-xs">Please fill all the fields correctly.</AlertDescription>
+                    </Alert>
+                  ) : null}
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -198,8 +209,13 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
               <AlertDialogAction
                 className="border border-border bg-foreground/90 hover:border-green-800 hover:bg-green-500"
                 onClick={() => {
+                  if (valueCombobox === "" || newBookmarkName === "" || newBookmarkUrl === "") {
+                    setErrorCreateBookmark(true);
+                    return;
+                  }
                   // Add new bookmark with the provided values to the selected folder in the userFolders state
                   const newBookmark = {
+                    id: uuidv4(),
                     title: newBookmarkName,
                     url: newBookmarkUrl,
                     description: newBookmarkDescription,
@@ -221,6 +237,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
 
                   setCreateBookmark(false);
                   setValueCombobox("");
+                  setErrorCreateBookmark(false);
                 }}
               >
                 Add
