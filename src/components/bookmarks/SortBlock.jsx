@@ -106,6 +106,7 @@ export default function SortBlock({
           <RxTrash className="h-5 w-5 font-black" />
         </Button>
       </div>
+
       <Button
         variant="outline"
         size="icon"

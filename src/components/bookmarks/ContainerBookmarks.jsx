@@ -18,20 +18,24 @@ export default function ContainerBookmarks() {
 
   // Load the bookmarks from the local storage or set the default folders
   useEffect(() => {
-    chrome.storage.local.get("bookmarks", function (result) {
-      if (result.bookmarks) {
-        console.log("Bookmarks found", result.bookmarks);
-        setUserFolders(result.bookmarks);
-      } else {
-        setUserFolders(defaultFolders);
-      }
-    });
+    // PROD
+    // chrome.storage.local.get("bookmarks", function (result) {
+    //   if (result.bookmarks) {
+    //     console.log("Bookmarks found", result.bookmarks);
+    //     setUserFolders(result.bookmarks);
+    //   } else {
+    //     setUserFolders(defaultFolders);
+    //   }
+    // });
+
+    //DEV
+    setUserFolders(defaultFolders);
   }, []);
 
-  // Save the bookmarks to the local storage
-  useEffect(() => {
-    chrome.storage.local.set({ bookmarks: userFolders });
-  }, [userFolders]);
+  // Save the bookmarks to the local storage (PROD)
+  // useEffect(() => {
+  //   chrome.storage.local.set({ bookmarks: userFolders });
+  // }, [userFolders]);
 
   //Extract bookmarks from the browser
   function extractBookmarks(bookmarkNodes) {
@@ -53,24 +57,32 @@ export default function ContainerBookmarks() {
 
   // Import existing bookmarks from the browser
   const importBookmarks = async () => {
-    chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
-      const bookmarks = extractBookmarks(bookmarkTreeNodes);
-      const newFolder = {
-        name: "Imported",
-        bookmarks: bookmarks,
-      };
+    // PROD
+    // chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
+    //   const bookmarks = extractBookmarks(bookmarkTreeNodes);
+    //   const newFolder = {
+    //     name: "Imported",
+    //     bookmarks: bookmarks,
+    //   };
 
-      if (bookmarks.length === 0) return;
-      if (userFolders.find((folder) => folder.name === "Imported")) {
-        setUserFolders((prev) => {
-          const index = prev.findIndex((folder) => folder.name === "Imported");
-          prev[index].bookmarks = [...bookmarks];
-          return [...prev];
-        });
-        return;
-      }
-      setUserFolders([...userFolders, newFolder]);
-    });
+    //   if (bookmarks.length === 0) return;
+    //   if (userFolders.find((folder) => folder.name === "Imported")) {
+    //     setUserFolders((prev) => {
+    //       const index = prev.findIndex((folder) => folder.name === "Imported");
+    //       prev[index].bookmarks = [...bookmarks];
+    //       return [...prev];
+    //     });
+    //     return;
+    //   }
+    //   setUserFolders([...userFolders, newFolder]);
+    // });
+
+    // DEV
+    const newFolder = {
+      name: "Imported",
+      bookmarks: mockBookmarks,
+    };
+    setUserFolders([...userFolders, newFolder]);
   };
 
   // Handle the checkbox change

@@ -1,23 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "Gestionnaire de Bookmarks",
+  "name": "Marker",
   "version": "1.0",
-  "description": "Une extension Chrome pour gérer vos bookmarks",
-  "permissions": [
-    "bookmarks",
-    "tabs",
-    "history",
-    "storage",
-    "unlimitedStorage",
-    "declarativeNetRequestWithHostAccess",
-    "declarativeNetRequest",
-    "browsingData",
-    "scripting",
-    "favicon"
-  ],
-  "host_permissions": ["https://www.google.com/", "https://translate.google.com/?hl=fr", "https://coinmarketcap.com/", "https://chat.openai.com/"],
-  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "description": "A chrome extension to manage your bookmarks",
+  "permissions": ["bookmarks", "tabs", "history", "storage", "unlimitedStorage", "declarativeNetRequest", "browsingData", "scripting", "favicon"],
   "chrome_url_overrides": {
     "newtab": "index.html"
+  },
+  "icons": {
+    "48": "logo.png",
+    "96": "logo2x.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.js",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   }
 }

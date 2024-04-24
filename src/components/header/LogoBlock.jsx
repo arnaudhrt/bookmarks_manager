@@ -6,7 +6,7 @@ export default function LogoBlock() {
       <div className="rounded-md">
         <img src={logo} alt="" className="w-full" />
       </div>
-      <p className="tx-lg font-bold tracking-[8px]">HYPER</p>
+      <p className="tx-lg font-bold tracking-[8px]">MARKER</p>
     </div>
   );
 }

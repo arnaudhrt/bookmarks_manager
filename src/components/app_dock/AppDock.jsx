@@ -21,15 +21,24 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function AppDock() {
   // SET UP USER APPS EITHER FROM LOCAL STORAGE EITHER FROM DEFAULT APPS
-  const [userApps, setUserApps] = useState(() => {
-    const savedApps = localStorage.getItem("userApps");
-    return savedApps ? JSON.parse(savedApps) : defaultDockApps;
-  });
+  const [userApps, setUserApps] = useState(defaultDockApps);
 
-  // SAVE USER APPS TO LOCAL STORAGE WHEN UPDATED
-  useEffect(() => {
-    localStorage.setItem("userApps", JSON.stringify(userApps));
-  }, [userApps]);
+  // PROD
+  // useEffect(() => {
+  //   chrome.storage.local.get("userdock", function (result) {
+  //     if (result.userdock) {
+  //       console.log("Bookmarks found", result.bookmarks);
+  //       setUserApps(result.userdock);
+  //     } else {
+  //       setUserApps(defaultDockApps);
+  //     }
+  //   });
+  // }, []);
+
+  //Save the bookmarks to the local storage (PROD)
+  // useEffect(() => {
+  //   chrome.storage.local.set({ userdock: userApps });
+  // }, [userApps]);
 
   // MAX APPS IN DOCK ALLOWED
   const dockMaxApps = 8;

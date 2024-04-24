@@ -8,11 +8,13 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
   const [editFolder, setEditFolder] = useState("");
 
   useEffect(() => {}, [userFolders]);
+
   return (
     <>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="p-3 flex flex-col gap-1">
+            <div className="h-[1px] w-full"></div>
             {userFolders.map((folder) => (
               <Folder
                 key={folder.id}

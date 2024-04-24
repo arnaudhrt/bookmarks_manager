@@ -215,5 +215,5 @@ export const mockBookmarks = [
     title: "netflix",
     url: "http://www.nutripure.fr/",
   },
-  { id: uuidv4(), title: "Dashboard | Finary", url: "https://app.finary.com/v2" },
+  { id: uuidv4(), title: "Dashboard | Finary", url: "https://app.finary.com/v2" }
 ];

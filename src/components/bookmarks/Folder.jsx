@@ -12,9 +12,10 @@ export default function Folder({ name, counter, selected, onClick, onContextMenu
       }, 100);
     }
   }, [editFolder, name]);
+
   return (
     <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${selected} `}
+      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${selected}`}
       onClick={onClick}
       onContextMenu={onContextMenu}
     >

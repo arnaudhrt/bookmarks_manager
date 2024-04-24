@@ -127,7 +127,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                   <Input
                     id="bookmark-name"
                     placeholder="Netflix"
-                    className="text-bg_dark placeholder:text-gray-400"
+                    className=" placeholder:text-gray-400"
                     onChange={(e) => setNewBookmarkName(e.target.value)}
                   />
                 </div>
@@ -138,7 +138,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                   <Input
                     id="bookmark-url"
                     placeholder="https://www.netflix.com/browse"
-                    className="text-bg_dark placeholder:text-gray-400"
+                    className=" placeholder:text-gray-400"
                     onChange={(e) => setNewBookmarkUrl(e.target.value)}
                   />
                 </div>
@@ -149,7 +149,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                   <Input
                     id="bookmark-description"
                     placeholder="Stream your favorite movies and TV shows"
-                    className="text-bg_dark placeholder:text-gray-400"
+                    className=" placeholder:text-gray-400"
                     onChange={(e) => setNewBookmarkDescription(e.target.value)}
                   />
                 </div>
@@ -159,7 +159,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                   <p className="text-xs mb-2 block">Folder</p>
                   <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+                      <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between text-foreground">
                         {valueCombobox ? capitalizeFirstLetter(valueCombobox) : "Select a folder.."}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
