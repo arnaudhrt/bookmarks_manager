@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { RxTrash } from "react-icons/rx";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function SortBlock({
   importBookmarks,
@@ -54,14 +55,24 @@ export default function SortBlock({
   return (
     <div className="px-5 py-3 border-b border-border flex justify-between ">
       <div className="flex gap-3">
-        <Checkbox
-          className="self-center"
-          checked={isChecked}
-          onCheckedChange={() => {
-            if (selectedFolder.bookmarks.length > 0) setIsChecked(!isChecked);
-            checkboxChange(selectedFolder.bookmarks.map((bookmark) => bookmark.id));
-          }}
-        />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Checkbox
+                className="self-center"
+                checked={isChecked}
+                onCheckedChange={() => {
+                  if (selectedFolder.bookmarks.length > 0) setIsChecked(!isChecked);
+                  checkboxChange(selectedFolder.bookmarks.map((bookmark) => bookmark.id));
+                }}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Select all</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between min-w-36">
@@ -90,34 +101,53 @@ export default function SortBlock({
             </Command>
           </PopoverContent>
         </Popover>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            setUserFolders((prev) => {
-              const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
-              prev[folderIndex].bookmarks = prev[folderIndex].bookmarks.filter((b) => !checkboxValues.includes(b.id));
-              return [...prev];
-            });
-            setCheckboxValues([]);
-          }}
-          className={`p-2 flex justify-center items-center transition`}
-        >
-          <RxTrash className="h-5 w-5 font-black" />
-        </Button>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  setUserFolders((prev) => {
+                    const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
+                    prev[folderIndex].bookmarks = prev[folderIndex].bookmarks.filter((b) => !checkboxValues.includes(b.id));
+                    return [...prev];
+                  });
+                  setCheckboxValues([]);
+                }}
+                className={`p-2 flex justify-center items-center transition`}
+              >
+                <RxTrash className="h-5 w-5 font-black" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => {
-          importBookmarks();
-          setIsImported(true);
-        }}
-        className={`p-2 flex justify-center items-center transition ${isImported ? "hidden" : "flex"}`}
-      >
-        <LuImport className="h-5 w-5 font-black" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                importBookmarks();
+                setIsImported(true);
+              }}
+              className={`p-2 flex justify-center items-center transition ${isImported ? "hidden" : "flex"}`}
+            >
+              <LuImport className="h-5 w-5 font-black" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Import bookmarks from your browser</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }

@@ -13,10 +13,10 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
     <>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="p-3 flex flex-col gap-1">
-            <div className="h-[1px] w-full"></div>
-            {userFolders.map((folder) => (
+          <div className="p-3 flex flex-col gap-1" onDragOver={(e) => e.preventDefault()}>
+            {userFolders.map((folder, index) => (
               <Folder
+                index={index}
                 key={folder.id}
                 name={folder.name}
                 counter={folder.bookmarks.length}
@@ -28,6 +28,7 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
                 editFolder={editFolder}
                 setEditFolder={setEditFolder}
                 setUserFolders={setUserFolders}
+                userFolders={userFolders}
               />
             ))}
           </div>

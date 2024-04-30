@@ -13,6 +13,7 @@ import { cn } from "../../lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import {
   AlertDialog,
@@ -67,9 +68,18 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
         >
           <PopoverTrigger>
             {/* CREATE NEW FOLDER BUTTON  */}
-            <Button variant="outline" size="icon">
-              <BiFolderPlus className="h-5 w-5" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <BiFolderPlus className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Create new folder</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </PopoverTrigger>
 
           {/* CREATE NEW FOLDER POP UP */}
@@ -110,9 +120,18 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
         </Popover>
 
         {/* CREATE NEW BOOKMARK  */}
-        <Button variant="outline" size="icon" onClick={() => setCreateBookmark(true)}>
-          <BiBookmarkPlus className="h-5 w-5" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" onClick={() => setCreateBookmark(true)}>
+                <BiBookmarkPlus className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create new bookmark</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         {/* CREATE NEW BOOKMARK MODAL */}
         <AlertDialog open={createBookmark}>
           <AlertDialogContent className="border boder-boder bg-background">

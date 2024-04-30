@@ -1,9 +1,15 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { CiFolderOn } from "react-icons/ci";
 import { useEffect } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function Folder({ name, counter, selected, onClick, onContextMenu, editFolder, setEditFolder, setUserFolders }) {
-  const inputRef = useRef();
+export default function Folder({ name, counter, selected, onClick, onContextMenu, editFolder, setEditFolder, setUserFolders, index }) {
+  const [dragging, setDragging] = useState(false);
+
+  const inputRef = useRef(null);
+  const dragNode = useRef(null);
+  const dragNodeIndex = useRef(null);
+
   useEffect(() => {
     if (editFolder === name) {
       setTimeout(() => {
@@ -13,11 +19,35 @@ export default function Folder({ name, counter, selected, onClick, onContextMenu
     }
   }, [editFolder, name]);
 
+  const handleDragStart = (e) => {
+    dragNode.current = e.target;
+    dragNodeIndex.current = index;
+    setTimeout(() => {
+      setDragging(true);
+    }, 0);
+  };
+
+  const handleDragEnd = () => {
+    setDragging(false);
+    dragNode.current = null;
+    dragNodeIndex.current = null;
+  };
+
+  const handleDragEnter = (e) => {
+    console.log(e.target);
+  };
+
   return (
     <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${selected}`}
+      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${selected} ${dragging ? "opacity-0" : ""}`}
       onClick={onClick}
       onContextMenu={onContextMenu}
+      draggable
+      onDragStart={(e) => handleDragStart(e)}
+      onDragEnd={(e) => handleDragEnd(e)}
+      onDragEnter={(e) => {
+        handleDragEnter(e);
+      }}
     >
       <div className="grow flex items-center gap-2">
         <CiFolderOn className="h-5 w-5" />
