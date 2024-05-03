@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { checkUrl } from "../../lib/checkUrl";
 
 import {
   AlertDialog,
@@ -25,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function CreateBlock({ userFolders, setUserFolders }) {
@@ -37,20 +38,37 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
   const [newBookmarkUrl, setNewBookmarkUrl] = useState("");
   const [newBookmarkDescription, setNewBookmarkDescription] = useState("");
   const [errorCreateBookmark, setErrorCreateBookmark] = useState(false);
-  console.log(userFolders);
-  console.log(valueCombobox);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const { toast } = useToast();
   const [folderName, setFolderName] = useState("");
   const createFolder = () => {
     const newFolder = {
       name: folderName,
+      index: userFolders.length,
       bookmarks: [],
     };
     setUserFolders([...userFolders, newFolder]);
   };
 
+  useEffect(() => {}, [userFolders]);
+
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const checkName = (name) => {
+    if (name === "") {
+      return false;
+    }
+    for (let folder of userFolders) {
+      for (let bookmark of folder.bookmarks) {
+        if (bookmark.title === name) {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   return (
@@ -207,7 +225,7 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                     <Alert variant="destructive" className={`mt-4 "block" "hidden"`}>
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Form is not valid!</AlertTitle>
-                      <AlertDescription className="text-xs">Please fill all the fields correctly.</AlertDescription>
+                      <AlertDescription className="text-xs">{errorMessage}</AlertDescription>
                     </Alert>
                   ) : null}
                 </div>
@@ -228,8 +246,24 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
               <AlertDialogAction
                 className="border border-border bg-foreground/90 hover:border-green-800 hover:bg-green-500"
                 onClick={() => {
-                  if (valueCombobox === "" || newBookmarkName === "" || newBookmarkUrl === "") {
+                  if (newBookmarkName === "" || newBookmarkUrl === "" || valueCombobox === "") {
                     setErrorCreateBookmark(true);
+                    setErrorMessage("Please fill all the fields correctly.");
+                    return;
+                  }
+                  if (!checkName(newBookmarkName)) {
+                    setErrorCreateBookmark(true);
+                    setErrorMessage("A bookmark with this title already exists. Please choose another name.");
+                    return;
+                  }
+                  if (valueCombobox === "") {
+                    setErrorCreateBookmark(true);
+                    setErrorMessage("Please select a folder for the bookmark.");
+                    return;
+                  }
+                  if (!checkUrl(newBookmarkUrl)) {
+                    setErrorCreateBookmark(true);
+                    setErrorMessage("URL is not valid. Please enter a valid URL.");
                     return;
                   }
                   // Add new bookmark with the provided values to the selected folder in the userFolders state

@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { checkUrl } from "@/lib/checkUrl";
 
 export default function AppDock() {
   // SET UP USER APPS EITHER FROM LOCAL STORAGE EITHER FROM DEFAULT APPS
@@ -55,6 +56,7 @@ export default function AppDock() {
   // STATES FOR THE CREATE NEW APP MODAL
   const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
   const [isMaxAppsReached, setIsMaxAppsReached] = useState(false);
+  const [emptyField, setEmptyField] = useState(false);
   const [newAppName, setNewAppName] = useState("");
   const [newAppUrl, setNewAppUrl] = useState("");
 
@@ -70,15 +72,38 @@ export default function AppDock() {
     }
   }, [isModalEditOpen, selectedApp]);
 
+  const [draggedApp, setDraggedApp] = useState(null);
+  const [dragging, setDragging] = useState(null);
+
+  const updateIndexFolder = () => {
+    setUserApps((prev) => {
+      prev.forEach((folder, index) => {
+        folder.index = index;
+      });
+      return [...prev];
+    });
+  };
+
   return (
     <>
       <ContextMenu>
         {/* APP DOCK */}
         <ContextMenuTrigger>
-          <div className="mt-12 flex justify-center items-center gap-10 flex-wrap">
+          <div className="mt-12 flex justify-center items-center gap-10 flex-wrap" onDragOver={(e) => e.preventDefault()}>
             {userApps.map((app) => (
-              <div key={app.id} onContextMenu={() => setSelectedApp(app)}>
-                <AppButton src={app.img_src} name={app.name} href={app.url} />
+              <div key={app.index} onContextMenu={() => setSelectedApp(app)}>
+                <AppButton
+                  index={app.index}
+                  src={app.img_src}
+                  name={app.name}
+                  href={app.url}
+                  dragging={dragging}
+                  setDragging={setDragging}
+                  draggedApp={draggedApp}
+                  setDraggedApp={setDraggedApp}
+                  userApps={userApps}
+                  setUserApps={setUserApps}
+                />
               </div>
             ))}
           </div>
@@ -86,7 +111,7 @@ export default function AppDock() {
 
         {/* RIGHT CLICK MENU */}
         <ContextMenuContent className="border border-border bg-background">
-          {selectedApp ? (
+          {
             <>
               <ContextMenuItem className="flex items-center" onSelect={handleOpenApp}>
                 <span className="grow">Open</span>
@@ -99,20 +124,20 @@ export default function AppDock() {
               <ContextMenuItem
                 className="flex items-center"
                 onSelect={() => {
-                  setUserApps((prevApps) => prevApps.filter((app) => app.id !== selectedApp.id));
+                  setUserApps((prevApps) => prevApps.filter((app) => app.index !== selectedApp.index));
                   setSelectedApp(null);
+                  updateIndexFolder();
                 }}
               >
                 <span className="grow">Remove</span>
                 <RxTrash className="text-sm ml-2" />
               </ContextMenuItem>
+              <ContextMenuItem className="flex items-center" onSelect={() => setisModalCreateOpen(true)}>
+                <span className="grow">Add</span>
+                <RxPlusCircled className="text-sm ml-2" />
+              </ContextMenuItem>
             </>
-          ) : (
-            <ContextMenuItem className="flex items-center" onSelect={() => setisModalCreateOpen(true)}>
-              <span className="grow">Add</span>
-              <RxPlusCircled className="text-sm ml-2" />
-            </ContextMenuItem>
-          )}
+          }
         </ContextMenuContent>
       </ContextMenu>
 
@@ -153,6 +178,11 @@ export default function AppDock() {
                 <AlertTitle>Number maximum of apps reached !</AlertTitle>
                 <AlertDescription className="text-xs">Please remove some apps before adding new ones.</AlertDescription>
               </Alert>
+              <Alert variant="destructive" className={`mt-4 ${emptyField ? "block" : "hidden"}`}>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Form is not valid!</AlertTitle>
+                <AlertDescription className="text-xs">Please fill all the fields correctly.</AlertDescription>
+              </Alert>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -169,10 +199,18 @@ export default function AppDock() {
                   setIsMaxAppsReached(true);
                   return;
                 }
+                if (newAppName === "" || newAppUrl === "") {
+                  setEmptyField(true);
+                  return;
+                }
+                if (!checkUrl(newAppUrl)) {
+                  setEmptyField(true);
+                  return;
+                }
                 setUserApps((prevApps) => [
                   ...prevApps,
                   {
-                    id: Date.now(),
+                    index: prevApps.length,
                     name: newAppName,
                     img_src: `https://www.google.com/s2/favicons?domain=${newAppUrl}&sz=180`,
                     url: newAppUrl,
@@ -220,10 +258,11 @@ export default function AppDock() {
               onClick={() => {
                 setUserApps((prevApps) =>
                   prevApps.map((app) => {
-                    if (app.id === selectedApp.id) {
+                    if (app.index === selectedApp.index) {
                       return {
                         ...app,
                         name: editedAppName,
+                        index: app.index,
                         img_src: `https://www.google.com/s2/favicons?domain=${editedAppUrl}&sz=180`,
                         url: editedAppUrl,
                       };

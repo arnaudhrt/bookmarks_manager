@@ -62,6 +62,7 @@ export default function ContainerBookmarks() {
     //   const bookmarks = extractBookmarks(bookmarkTreeNodes);
     //   const newFolder = {
     //     name: "Imported",
+    //     index: userFolders.length,
     //     bookmarks: bookmarks,
     //   };
 
@@ -80,6 +81,7 @@ export default function ContainerBookmarks() {
     // DEV
     const newFolder = {
       name: "Imported",
+      index: userFolders.length,
       bookmarks: mockBookmarks,
     };
     setUserFolders([...userFolders, newFolder]);

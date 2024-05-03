@@ -9,11 +9,10 @@ import { ChevronsUpDown } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { RxTrash } from "react-icons/rx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FaWandMagicSparkles } from "react-icons/fa6";
 
 export default function SortBlock({
   importBookmarks,
-  isImported,
-  setIsImported,
   userFolders,
   checkboxValues,
   selectedFolder,
@@ -26,6 +25,8 @@ export default function SortBlock({
   const [isChecked, setIsChecked] = useState(false);
 
   const folders = userFolders.map((folder) => folder.name);
+
+  const [disableImportButton, setDisableImportButton] = useState(false);
 
   // Move selected bookmarks to the selected folder
   const moveBookmarkToFolder = (folder) => {
@@ -51,6 +52,16 @@ export default function SortBlock({
     setValueCombobox("");
     setIsChecked(false);
   }, [selectedFolder]);
+
+  useEffect(() => {
+    const folders = userFolders.map((folder) => folder.name);
+    const isImported = folders.includes("Imported");
+    if (isImported) {
+      setDisableImportButton(true);
+    } else {
+      setDisableImportButton(false);
+    }
+  }, [userFolders]);
 
   return (
     <div className="px-5 py-3 border-b border-border flex justify-between ">
@@ -101,7 +112,8 @@ export default function SortBlock({
             </Command>
           </PopoverContent>
         </Popover>
-
+      </div>
+      <div className="flex gap-2">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -122,32 +134,45 @@ export default function SortBlock({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete</p>
+              <p>Delete selected bookmarks</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" className={`p-2 flex justify-center items-center transition`}>
+                <FaWandMagicSparkles className="h-4 w-4 font-black" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Clean up selected bookmarks</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  if (!disableImportButton) {
+                    importBookmarks();
+                  }
+                }}
+                className={`p-2 flex justify-center items-center transition ${disableImportButton ? "cursor-not-allowed opacity-20" : ""}`}
+              >
+                <LuImport className="h-5 w-5 font-black" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Import bookmarks from your browser</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                importBookmarks();
-                setIsImported(true);
-              }}
-              className={`p-2 flex justify-center items-center transition ${isImported ? "hidden" : "flex"}`}
-            >
-              <LuImport className="h-5 w-5 font-black" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Import bookmarks from your browser</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
     </div>
   );
 }

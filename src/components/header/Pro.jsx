@@ -102,7 +102,7 @@ export default function Pro() {
                   All future updates & features
                 </li>
               </ul>
-              <Button className="w-full">Upgrade</Button>
+              <Button className="w-full">Coming Soon</Button>
             </div>
           </div>
 

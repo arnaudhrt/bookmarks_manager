@@ -2,21 +2,31 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { RxPencil1 } from "react-icons/rx";
 import { RxTrash } from "react-icons/rx";
 import Folder from "./Folder";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function FolderBlock({ userFolders, setUserFolders, selectedFolder, setSelectedFolder }) {
   const [editFolder, setEditFolder] = useState("");
+  const [draggedFolder, setDraggedFolder] = useState(null);
+  const [dragging, setDragging] = useState(null);
 
-  useEffect(() => {}, [userFolders]);
+  // Update the index of the folders after a folder is removed
+  const updateIndexFolder = () => {
+    setUserFolders((prev) => {
+      prev.forEach((folder, index) => {
+        folder.index = index;
+      });
+      return [...prev];
+    });
+  };
 
   return (
     <>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="p-3 flex flex-col gap-1" onDragOver={(e) => e.preventDefault()}>
-            {userFolders.map((folder, index) => (
+            {userFolders.map((folder) => (
               <Folder
-                index={index}
+                index={folder.index}
                 key={folder.id}
                 name={folder.name}
                 counter={folder.bookmarks.length}
@@ -29,6 +39,10 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
                 setEditFolder={setEditFolder}
                 setUserFolders={setUserFolders}
                 userFolders={userFolders}
+                setDraggedFolder={setDraggedFolder}
+                draggedFolder={draggedFolder}
+                setDragging={setDragging}
+                dragging={dragging}
               />
             ))}
           </div>
@@ -48,6 +62,7 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
             onSelect={() => {
               setUserFolders(userFolders.filter((folder) => folder.name !== selectedFolder.name));
               setSelectedFolder(userFolders[0]);
+              updateIndexFolder();
             }}
           >
             <span className="grow">Remove</span>

@@ -65,6 +65,7 @@ export default function Bookmark({
                 setSelectedBookmark(id);
               }}
               className={`flex gap-5 hover:bg-accent rounded-sm px-5 py-4 grow ${isChecked ? "bg-accent" : ""}`}
+              draggable
             >
               <div className="flex w-12 h-12 bg-white border border-card-foreground/20 rounded-sm p-1">
                 <img src={icon} alt="icon bookmark" className="rounded-sm" />
