@@ -1,17 +1,4 @@
-export default function AppButton({
-  id,
-  src,
-  href,
-  name,
-  index,
-  setUserFolders,
-  draggedApp,
-  setDragging,
-  dragging,
-  userApps,
-  setUserApps,
-  setDraggedApp,
-}) {
+export default function AppButton({ id, src, href, name, index, draggedApp, setDragging, dragging, userApps, setUserApps, setDraggedApp }) {
   const handleDragStart = () => {
     setDraggedApp(userApps[index]);
     setTimeout(() => {
@@ -23,7 +10,7 @@ export default function AppButton({
     setDragging(null);
   };
 
-  const handleDragEnter = (e) => {
+  const handleDragEnter = () => {
     setUserApps((prev) => {
       if (draggedApp.index === index) {
         return [...prev];

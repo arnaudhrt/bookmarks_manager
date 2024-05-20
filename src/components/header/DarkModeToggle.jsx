@@ -2,9 +2,30 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "../global/DarkmodeContext";
+import { useCallback, useEffect } from "react";
 
 export default function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+  const handleKeyPress = useCallback(
+    (event) => {
+      const isCmdOrCtrlPressed = event.metaKey || event.ctrlKey;
+      if (isCmdOrCtrlPressed && event.key === "u") {
+        toggleTheme();
+      }
+    },
+    [toggleTheme]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -17,7 +38,6 @@ export default function ModeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

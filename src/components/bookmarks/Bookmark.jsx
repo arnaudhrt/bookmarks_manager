@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { RxPencil1 } from "react-icons/rx";
 import { RxTrash } from "react-icons/rx";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +22,6 @@ import { AlertCircle } from "lucide-react";
 export default function Bookmark({
   url,
   name,
-  description,
   icon,
   id,
   checkboxValues,
@@ -31,18 +29,19 @@ export default function Bookmark({
   checkboxChange,
   setSelectedBookmark,
   selectedBookmark,
-  userFolders,
   setUserFolders,
   selectedFolder,
+  dragging,
+  setDragging,
+  draggedBookmark,
+  setDraggedBookmark,
+  index,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [editBookmark, setEditBookmark] = useState(false);
   const [editBookmarkName, setEditBookmarkName] = useState(name);
   const [editBookmarkUrl, setEditBookmarkUrl] = useState(url);
-  const [editBookmarkDescription, setEditBookmarkDescription] = useState(description);
   const [errorEditBookmark, setErrorEditBookmark] = useState(false);
-
-  console.log(checkboxValues);
 
   useEffect(() => {
     if (checkboxValues.includes(id)) {
@@ -51,7 +50,36 @@ export default function Bookmark({
       setIsChecked(false);
     }
   }, [checkboxValues]);
-  console.log(userFolders);
+
+  // DRAG AND DROP FUNCTIONALITY
+  const handleDragStart = () => {
+    setTimeout(() => {
+      setDraggedBookmark(selectedFolder.bookmarks[index]);
+      setDraggedBookmark((prev) => {
+        prev.index = index;
+        return prev;
+      });
+      setDragging(id);
+    }, 0);
+  };
+  const handleDragEnd = () => {
+    setDragging(null);
+  };
+  const handleDragEnter = () => {
+    setUserFolders((prev) => {
+      const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
+      if (draggedBookmark.index === index) {
+        return prev;
+      }
+      prev[folderIndex].bookmarks.splice(draggedBookmark.index, 1);
+      prev[folderIndex].bookmarks.splice(index, 0, draggedBookmark);
+      prev[folderIndex].bookmarks.forEach((bookmark, index) => {
+        bookmark.index = index;
+      });
+      return [...prev];
+    });
+  };
+
   return (
     <>
       <ContextMenu>
@@ -64,15 +92,19 @@ export default function Bookmark({
               onContextMenu={() => {
                 setSelectedBookmark(id);
               }}
-              className={`flex gap-5 hover:bg-accent rounded-sm px-5 py-4 grow ${isChecked ? "bg-accent" : ""}`}
+              className={`flex gap-5 hover:bg-accent rounded-sm px-5 py-3 grow ${isChecked ? "bg-accent" : ""} ${dragging === id ? "opacity-0" : ""}`}
               draggable
+              onDragStart={(e) => handleDragStart(e)}
+              onDragEnd={(e) => handleDragEnd(e)}
+              onDragEnter={() => {
+                handleDragEnter();
+              }}
             >
-              <div className="flex w-12 h-12 bg-white border border-card-foreground/20 rounded-sm p-1">
-                <img src={icon} alt="icon bookmark" className="rounded-sm" />
+              <div className="flex size-10 bg-white border border-card-foreground/20 rounded-sm p-1">
+                <img src={icon} alt="icon bookmark" className="rounded-sm" draggable={false} />
               </div>
-              <div>
+              <div className="flex items-center">
                 <h3 className="text-md font-medium mb-1">{name}</h3>
-                <p className="text-sm text-muted-foreground">{description}</p>
               </div>
             </a>
           </div>
@@ -113,21 +145,9 @@ export default function Bookmark({
       <AlertDialog open={editBookmark}>
         <AlertDialogContent className="border boder-boder bg-background">
           <AlertDialogHeader>
-            <AlertDialogTitle>Edit a bookmark</AlertDialogTitle>
+            <AlertDialogTitle>Edit bookmark</AlertDialogTitle>
             <AlertDialogDescription>
               <Separator className="my-5 bg-foreground/90" />
-              <div className="mb-4">
-                <Label htmlFor="bookmark-name" className="text-xs mb-2 block">
-                  Bookmark title
-                </Label>
-                <Input
-                  id="bookmark-name"
-                  placeholder="Netflix"
-                  className="text-bg_dark placeholder:text-gray-400"
-                  onChange={(e) => setEditBookmarkName(e.target.value)}
-                  defaultValue={name}
-                />
-              </div>
               <div className="mb-4">
                 <Label htmlFor="bookmark-url" className="text-xs mb-2 block">
                   Bookmark URL
@@ -141,15 +161,15 @@ export default function Bookmark({
                 />
               </div>
               <div className="mb-4">
-                <Label htmlFor="bookmark-url" className="text-xs mb-2 block">
-                  Bookmark Description
+                <Label htmlFor="bookmark-name" className="text-xs mb-2 block">
+                  Bookmark title
                 </Label>
+
                 <Input
-                  id="bookmark-description"
-                  placeholder="Stream your favorite movies and TV shows"
+                  id="bookmark-name"
                   className="text-bg_dark placeholder:text-gray-400"
-                  onChange={(e) => setEditBookmarkDescription(e.target.value)}
-                  defaultValue={description}
+                  onChange={(e) => setEditBookmarkName(e.target.value)}
+                  defaultValue={editBookmarkName}
                 />
               </div>
               {errorEditBookmark ? (
@@ -188,7 +208,6 @@ export default function Bookmark({
                     ...prev[folderIndex].bookmarks[bookmarkIndex],
                     title: editBookmarkName,
                     url: editBookmarkUrl,
-                    description: editBookmarkDescription,
                   };
                   prev[folderIndex].bookmarks[bookmarkIndex] = editedBookmark;
                   return [...prev];

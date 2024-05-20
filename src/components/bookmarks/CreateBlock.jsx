@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function CreateBlock({ userFolders, setUserFolders }) {
@@ -36,7 +36,6 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
   const [valueCombobox, setValueCombobox] = useState("");
   const [newBookmarkName, setNewBookmarkName] = useState("");
   const [newBookmarkUrl, setNewBookmarkUrl] = useState("");
-  const [newBookmarkDescription, setNewBookmarkDescription] = useState("");
   const [errorCreateBookmark, setErrorCreateBookmark] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -50,8 +49,6 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
     };
     setUserFolders([...userFolders, newFolder]);
   };
-
-  useEffect(() => {}, [userFolders]);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -70,6 +67,23 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
     }
     return true;
   };
+
+  const handleKeyPress = useCallback(
+    (event) => {
+      const isCmdOrCtrlPressed = event.metaKey || event.ctrlKey;
+      if (isCmdOrCtrlPressed && event.key === "b") {
+        setCreateBookmark((prev) => !prev);
+      }
+    },
+    [setCreateBookmark]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   return (
     <div className="flex justify-between items-center border-b border-border px-5 py-3 w-full">
@@ -179,17 +193,6 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                     onChange={(e) => setNewBookmarkUrl(e.target.value)}
                   />
                 </div>
-                <div className="mb-4">
-                  <Label htmlFor="bookmark-url" className="text-xs mb-2 block">
-                    Bookmark Description
-                  </Label>
-                  <Input
-                    id="bookmark-description"
-                    placeholder="Stream your favorite movies and TV shows"
-                    className=" placeholder:text-gray-400"
-                    onChange={(e) => setNewBookmarkDescription(e.target.value)}
-                  />
-                </div>
 
                 {/* SELECT INPUT CHOOSE FOLDER */}
                 <div className="mb-4">
@@ -271,7 +274,6 @@ export default function CreateBlock({ userFolders, setUserFolders }) {
                     id: uuidv4(),
                     title: newBookmarkName,
                     url: newBookmarkUrl,
-                    description: newBookmarkDescription,
                   };
                   // Create a new copy of userFolders with the new bookmark added to the selected folder
                   const newUserFolders = userFolders.map((folder) => {

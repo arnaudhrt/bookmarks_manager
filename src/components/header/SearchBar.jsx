@@ -8,16 +8,15 @@ export default function SearchBar() {
 
   useEffect(() => {
     // PROD
-    // chrome.storage.local.get("bookmarks", function (result) {
-    //   if (result.bookmarks) {
-    //     console.log("Bookmarks found", result.bookmarks);
-    //     setUserFolders(result.bookmarks);
-    //   } else {
-    //     setUserFolders(defaultFolders);
-    //   }
-    // });
+    chrome.storage.local.get("bookmarks", function (result) {
+      if (result.bookmarks) {
+        setUserFolders(result.bookmarks);
+      } else {
+        setUserFolders(defaultFolders);
+      }
+    });
 
-    setUserFolders(defaultFolders); //DEV
+    // setUserFolders(defaultFolders); //DEV
   }, []);
 
   // STATE THAT OPEN THE COMMAND DIALOG
@@ -46,13 +45,12 @@ export default function SearchBar() {
       </div>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search on Google or Bookmarks..." />
+        <CommandInput placeholder="Search Bookmarks..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Bookmarks">
             {userFolders.map((folder) =>
               folder.bookmarks.map((bookmark) => {
-                console.log(bookmark.title);
                 return (
                   <CommandItem key={bookmark.id} onSelect={() => window.open(bookmark.url, "_blank")} className="grow">
                     <div className="flex gap-3 items-center">

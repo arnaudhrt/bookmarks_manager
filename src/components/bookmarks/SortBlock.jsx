@@ -9,7 +9,6 @@ import { ChevronsUpDown } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { RxTrash } from "react-icons/rx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { FaWandMagicSparkles } from "react-icons/fa6";
 
 export default function SortBlock({
   importBookmarks,
@@ -134,19 +133,7 @@ export default function SortBlock({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete selected bookmarks</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" className={`p-2 flex justify-center items-center transition`}>
-                <FaWandMagicSparkles className="h-4 w-4 font-black" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Clean up selected bookmarks</p>
+              <p>Delete</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -168,7 +155,7 @@ export default function SortBlock({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Import bookmarks from your browser</p>
+              <p>Import</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

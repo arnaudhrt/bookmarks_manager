@@ -30,7 +30,9 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
                 key={folder.id}
                 name={folder.name}
                 counter={folder.bookmarks.length}
-                onClick={() => setSelectedFolder(folder)}
+                onClick={() => {
+                  setSelectedFolder(folder);
+                }}
                 selected={selectedFolder.name === folder.name ? "bg-accent" : ""}
                 onContextMenu={() => {
                   setSelectedFolder(folder);
@@ -43,6 +45,7 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
                 draggedFolder={draggedFolder}
                 setDragging={setDragging}
                 dragging={dragging}
+                setSelectedFolder={setSelectedFolder}
               />
             ))}
           </div>
@@ -61,7 +64,7 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
             className="flex items-center"
             onSelect={() => {
               setUserFolders(userFolders.filter((folder) => folder.name !== selectedFolder.name));
-              setSelectedFolder(userFolders[0]);
+              setSelectedFolder({ name: "", bookmarks: [] });
               updateIndexFolder();
             }}
           >

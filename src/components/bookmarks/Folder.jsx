@@ -18,14 +18,12 @@ export default function Folder({
   setDragging,
   dragging,
 }) {
-  console.log(index);
   const inputRef = useRef(null);
 
   useEffect(() => {
     if (editFolder === name) {
       setTimeout(() => {
         inputRef.current.focus();
-        console.log("focused");
       }, 100);
     }
   }, [editFolder, name]);
@@ -57,7 +55,9 @@ export default function Folder({
 
   return (
     <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${selected} ${dragging === name ? "opacity-0" : ""}`}
+      className={`flex items-center gap-2 px-3 py-2 rounded-sm hover:bg-accent cursor-pointer ${dragging === null ? selected : ""} ${
+        dragging === name ? "opacity-0" : ""
+      }`}
       onClick={onClick}
       onContextMenu={onContextMenu}
       draggable

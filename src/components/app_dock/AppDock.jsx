@@ -19,27 +19,31 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { checkUrl } from "@/lib/checkUrl";
+import rightclicklight from "../../assets/rightclick-light.png";
+import rightclickdark from "../../assets/rightclick-dark.png";
+import dndlight from "../../assets/dnd-light.png";
+import dnddark from "../../assets/dnd-dark.png";
+import { useTheme } from "../global/DarkmodeContext";
 
-export default function AppDock() {
+export default function AppDock({ disableMarks }) {
   // SET UP USER APPS EITHER FROM LOCAL STORAGE EITHER FROM DEFAULT APPS
   const [userApps, setUserApps] = useState(defaultDockApps);
 
   // PROD
-  // useEffect(() => {
-  //   chrome.storage.local.get("userdock", function (result) {
-  //     if (result.userdock) {
-  //       console.log("Bookmarks found", result.bookmarks);
-  //       setUserApps(result.userdock);
-  //     } else {
-  //       setUserApps(defaultDockApps);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    chrome.storage.local.get("userdock", function (result) {
+      if (result.userdock) {
+        setUserApps(result.userdock);
+      } else {
+        setUserApps(defaultDockApps);
+      }
+    });
+  }, []);
 
   //Save the bookmarks to the local storage (PROD)
-  // useEffect(() => {
-  //   chrome.storage.local.set({ userdock: userApps });
-  // }, [userApps]);
+  useEffect(() => {
+    chrome.storage.local.set({ userdock: userApps });
+  }, [userApps]);
 
   // MAX APPS IN DOCK ALLOWED
   const dockMaxApps = 8;
@@ -84,12 +88,13 @@ export default function AppDock() {
     });
   };
 
+  const { theme } = useTheme();
   return (
     <>
       <ContextMenu>
         {/* APP DOCK */}
         <ContextMenuTrigger>
-          <div className="mt-12 flex justify-center items-center gap-10 flex-wrap" onDragOver={(e) => e.preventDefault()}>
+          <div className="mt-12 flex justify-center items-center gap-10 flex-wrap relative" onDragOver={(e) => e.preventDefault()}>
             {userApps.map((app) => (
               <div key={app.index} onContextMenu={() => setSelectedApp(app)}>
                 <AppButton
@@ -106,6 +111,12 @@ export default function AppDock() {
                 />
               </div>
             ))}
+            {disableMarks && (
+              <>
+                <img src={theme === "light" ? rightclicklight : rightclickdark} alt="" className="absolute w-[250px] -bottom-14 left-[20%]" />
+                <img src={theme === "light" ? dndlight : dnddark} alt="" className="absolute w-[250px] -top-12 right-[20%]" />
+              </>
+            )}
           </div>
         </ContextMenuTrigger>
 

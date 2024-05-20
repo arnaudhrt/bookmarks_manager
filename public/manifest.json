@@ -3,7 +3,7 @@
   "name": "Marker",
   "version": "1.0",
   "description": "A chrome extension to manage your bookmarks",
-  "permissions": ["bookmarks", "tabs", "history", "storage", "unlimitedStorage", "declarativeNetRequest", "browsingData", "scripting", "favicon"],
+  "permissions": ["bookmarks", "tabs", "storage", "unlimitedStorage"],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
@@ -11,12 +11,11 @@
     "48": "logo.png",
     "96": "logo2x.png"
   },
-  "browser_action": {
-    "default_popup": "popup.js",
+  "action": {
+    "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "48": "logo.png",
+      "96": "logo2x.png"
     }
   }
 }
