@@ -40,6 +40,9 @@ export default function Folder({
   };
 
   const handleDragEnter = () => {
+    if (draggedFolder === null) {
+      return;
+    }
     setUserFolders((prev) => {
       if (draggedFolder.index === index) {
         return [...prev];

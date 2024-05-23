@@ -66,6 +66,9 @@ export default function Bookmark({
     setDragging(null);
   };
   const handleDragEnter = () => {
+    if (draggedBookmark === null) {
+      return;
+    }
     setUserFolders((prev) => {
       const folderIndex = prev.findIndex((f) => f.name === selectedFolder.name);
       if (draggedBookmark.index === index) {

@@ -150,7 +150,7 @@ export default function ContainerBookmarks({ disableMarks, setDisableMarks }) {
           setDisableMarks={setDisableMarks}
           setSelectedFolder={setSelectedFolder}
         />
-        <div className="p-4" onDragOver={(e) => e.preventDefault()} onDragLeave={() => setDragging(null)}>
+        <div className="p-4" onDragOver={(e) => e.preventDefault()}>
           {selectedFolder.bookmarks.length > 0 ? (
             selectedFolder.bookmarks.map((bookmark, index) => (
               <Bookmark

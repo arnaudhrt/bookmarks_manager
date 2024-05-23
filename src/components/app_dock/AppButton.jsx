@@ -11,6 +11,9 @@ export default function AppButton({ id, src, href, name, index, draggedApp, setD
   };
 
   const handleDragEnter = () => {
+    if (draggedApp === null) {
+      return;
+    }
     setUserApps((prev) => {
       if (draggedApp.index === index) {
         return [...prev];
