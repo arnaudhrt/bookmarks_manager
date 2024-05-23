@@ -94,7 +94,11 @@ export default function AppDock({ disableMarks }) {
       <ContextMenu>
         {/* APP DOCK */}
         <ContextMenuTrigger>
-          <div className="mt-12 flex justify-center items-center gap-10 flex-wrap relative" onDragOver={(e) => e.preventDefault()}>
+          <div
+            className="mt-12 flex justify-center items-center gap-10 flex-wrap relative"
+            onDragOver={(e) => e.preventDefault()}
+            onDragLeave={() => setDragging(null)}
+          >
             {userApps.map((app) => (
               <div key={app.index} onContextMenu={() => setSelectedApp(app)}>
                 <AppButton

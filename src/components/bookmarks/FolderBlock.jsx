@@ -23,7 +23,7 @@ export default function FolderBlock({ userFolders, setUserFolders, selectedFolde
     <>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="p-3 flex flex-col gap-1" onDragOver={(e) => e.preventDefault()}>
+          <div className="p-3 flex flex-col gap-1" onDragOver={(e) => e.preventDefault()} onDragLeave={() => setDragging(null)}>
             {userFolders.map((folder) => (
               <Folder
                 index={folder.index}
